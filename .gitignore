@@ -1,3 +1,6 @@
+#sensitive configurariton date
+config.r
+
 # History files
 .Rhistory
 .Rapp.history
