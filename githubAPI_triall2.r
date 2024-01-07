@@ -11,12 +11,7 @@ org_name <- "collabryio"
 public_url <- paste0("https://api.github.com/orgs/", org_name, "/repos")
 
 # GitHub API URL for private repos
-# private_url <- paste0("https://api.github.com/orgs/", org_name, "/repos?type=private")
-
-# private_url <- paste0('https://api.github.com/orgs/',org_name,'/repos?per_page=1000', auth=(user, token))
-
-
-private_url <- "https://api.github.com/orgs/collabryio/repos?access_token=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"
+private_url <- paste0("https://api.github.com/orgs/", org_name, "/repos?type=private")
 
 # GET request to GitHub API for public repos
 public_response <- GET(public_url, headers = headers)
