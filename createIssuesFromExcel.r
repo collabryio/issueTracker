@@ -29,29 +29,37 @@ repoPath <- "collabryio/issueTracker"
 # create repo api call to get the issues
 issue_url <- paste0("https://api.github.com/repos/", repoPath, "/issues")
 
+# read issues to check whether the issue is already created or not
+issues <- GET(issue_url)
+issue_list <- fromJSON(content(issues, "text"))$title
+
 for (i in 1:nrow(data)) {
     # Set the issue details
     issue_title <- paste0(data$task_id[i], "--", data$file_name[i])
-    issue_body <- data$todo[i]
-    issue_assignee <- data$person_name[i]
-    issue_label <- "good first issue"
-
-    payload <- list(title = issue_title, body = issue_body, assignee = issue_assignee, label = issue_label)
-    # Convert the list to JSON
-    issue_json <- toJSON(payload, auto_unbox = TRUE)
-
-    response <- httr::POST(
-        issue_url,
-        add_headers(Authorization = auth_token),
-        body = issue_json,
-        encode = "json",
-        content_type("application/json")
-    )
-
-    # Check if the request was successful
-    if (status_code(response) == 201) {
-        cat(paste("Issue '", issue_title, "' created successfully.\n"))
+    if (issue_title %in% issue_list) {
+        cat(paste("Issue '", issue_title, "' is alreay created\n"))
     } else {
-        cat(paste("Failed to create issue '", issue_title, "'. Status code: ", status_code(response), ", Response: ", content(response, "text"), "\n"))
+        issue_body <- data$todo[i]
+        issue_assignee <- data$person_name[i]
+        issue_label <- "good first issue"
+
+        payload <- list(title = issue_title, body = issue_body, assignee = issue_assignee, label = issue_label)
+        # Convert the list to JSON
+        issue_json <- toJSON(payload, auto_unbox = TRUE)
+
+        response <- httr::POST(
+            issue_url,
+            add_headers(Authorization = auth_token),
+            body = issue_json,
+            encode = "json",
+            content_type("application/json")
+        )
+
+        # Check if the request was successful
+        if (status_code(response) == 201) {
+            cat(paste("Issue '", issue_title, "' created successfully.\n"))
+        } else {
+            cat(paste("Failed to create issue '", issue_title, "'. Status code: ", status_code(response), ", Response: ", content(response, "text"), "\n"))
+        }
     }
 }
