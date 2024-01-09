@@ -41,9 +41,15 @@ for (i in 1:nrow(data)) {
     } else {
         issue_body <- data$todo[i]
         issue_assignee <- data$person_name[i]
-        issue_label <- "good first issue"
+        issue_label <- c("test")
 
-        payload <- list(title = issue_title, body = issue_body, assignee = issue_assignee, label = issue_label)
+        payload <- list(
+            title = issue_title,
+            body = issue_body,
+            assignee = issue_assignee,
+            label = issue_label
+        )
+
         # Convert the list to JSON
         issue_json <- toJSON(payload, auto_unbox = TRUE)
 
